@@ -15,6 +15,10 @@ phases:
       - ls -la build
   post_build:
     commands:
+      - echo Checking if build folder exists...
+      - ls -la build || { echo "Build folder not found!"; exit 1; }
+      - echo Verifying S3 bucket...
+      - aws s3 ls s3://my-react-site-123 || { echo "S3 bucket does not exist!"; exit 1; }
       - echo Deploying to S3...
       - aws s3 sync build/ s3://my-react-website-12 --delete --debug
 
@@ -22,4 +26,5 @@ artifacts:
   files:
     - '**/*'
   base-directory: build
+
 
